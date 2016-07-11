@@ -2550,8 +2550,9 @@ class MarkdownExtra_Parser extends Markdown_Parser {
 				(?:\n|\A)
 				# 1: Opening marker
 				(
-					~{3,} # Marker: three tilde or more.
+					[`~]{3,} # Marker: three tilde or more.
 				)
+				(?:\S*)
 				[ ]* \n # Whitespace and newline following marker.
 				
 				# 2: Content
