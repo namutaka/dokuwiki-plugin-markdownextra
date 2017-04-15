@@ -316,6 +316,9 @@ class Markdown_Parser {
 		# Convert all tabs to spaces.
 		$text = $this->detab($text);
 
+		# get style marker
+		$text = $this->stripWrapStyleMarker($text);
+
 		# Turn block-level HTML blocks into hash entries
 		$text = $this->hashHTMLBlocks($text);
 
@@ -1706,6 +1709,7 @@ class MarkdownExtra_Parser extends Markdown_Parser {
 			"stripFootnotes"     => 15,
 			"stripAbbreviations" => 25,
 			"appendFootnotes"    => 50,
+			"wrapStyleMarker"    => 60,
 			);
 		$this->block_gamut += array(
 			"doFencedCodeBlocks" => 5,
@@ -2839,6 +2843,25 @@ class MarkdownExtra_Parser extends Markdown_Parser {
 		} else {
 			return $matches[0];
 		}
+	}
+
+
+	### Wrap
+
+	function stripWrapStyleMarker($text) {
+		return preg_replace_callback(
+			'/^\{\{\{([^\}]*)\}\}\}$/m',
+			function($matches) {
+				$this->style = $matches[1];
+				return "";
+			},
+			$text, 1);
+	}
+
+	function wrapStyleMarker($text) {
+		$text = "<div class=\"markdown-wrap " . $this->style . "\">\n" .
+		$text . "\n</div>";
+		return $text;
 	}
 
 }
